@@ -9,80 +9,80 @@ body {
 
 @layer base {
   :root {
-    /* New Cool & Modern Theme - Light Mode */
-    --background: 210 40% 98%; /* Very Light Cool Gray */
-    --foreground: 220 25% 10%; /* Dark Desaturated Blue */
+    /* Food App Theme - Light Mode */
+    --background: 40 50% 98%; /* Light Cream */
+    --foreground: 30 30% 15%; /* Dark Warm Brown */
     --card: 0 0% 100%; /* White */
-    --card-foreground: 220 25% 10%;
+    --card-foreground: 30 30% 15%;
     --popover: 0 0% 100%;
-    --popover-foreground: 220 25% 10%;
-    --primary: 190 70% 45%; /* Vibrant Teal/Cyan */
+    --popover-foreground: 30 30% 15%;
+    --primary: 30 80% 55%; /* Warm Orange */
     --primary-foreground: 0 0% 100%; /* White */
-    --secondary: 210 30% 90%; /* Light Cool Gray */
-    --secondary-foreground: 190 60% 30%; /* Darker Teal */
-    --muted: 210 30% 94%; /* Lighter Cool Gray */
-    --muted-foreground: 220 15% 45%; /* Softer Muted Blue */
-    --accent: 25 90% 60%; /* Soft Coral/Peach */
-    --accent-foreground: 20 80% 25%; /* Darker Coral/Brown */
+    --secondary: 45 70% 92%; /* Light Yellow/Beige */
+    --secondary-foreground: 30 70% 30%; /* Darker Orange/Brown */
+    --muted: 40 40% 94%; /* Lighter Cream/Beige */
+    --muted-foreground: 30 25% 45%; /* Softer Muted Brown */
+    --accent: 90 60% 50%; /* Muted Green */
+    --accent-foreground: 90 80% 15%; /* Dark Green */
     --destructive: 0 70% 55%; /* Clear Red */
     --destructive-foreground: 0 0% 100%;
-    --border: 210 20% 88%; /* Light Cool Border */
-    --input: 210 25% 92%; /* Light Cool Input */
-    --ring: 190 70% 45%; /* Teal for ring */
+    --border: 30 30% 88%; /* Light Warm Border */
+    --input: 30 35% 92%; /* Light Warm Input */
+    --ring: 30 80% 55%; /* Orange for ring */
     --radius: 0.5rem;
 
-    --chart-1: 190 70% 50%;
-    --chart-2: 210 60% 55%;
-    --chart-3: 25 80% 65%;
-    --chart-4: 200 65% 60%;
-    --chart-5: 30 70% 70%;
+    --chart-1: 30 75% 60%;
+    --chart-2: 45 65% 65%;
+    --chart-3: 90 50% 55%;
+    --chart-4: 20 70% 60%;
+    --chart-5: 35 60% 70%;
 
-    --sidebar-background: 0 0% 100%; 
-    --sidebar-foreground: 220 25% 10%;
-    --sidebar-primary: 190 70% 45%;
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 30 30% 15%;
+    --sidebar-primary: 30 80% 55%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 210 30% 94%;
-    --sidebar-accent-foreground: 220 25% 10%;
-    --sidebar-border: 210 20% 88%;
-    --sidebar-ring: 190 70% 45%;
+    --sidebar-accent: 40 40% 94%;
+    --sidebar-accent-foreground: 30 30% 15%;
+    --sidebar-border: 30 30% 88%;
+    --sidebar-ring: 30 80% 55%;
   }
 
   .dark {
-    /* New Cool & Modern Theme - Dark Mode */
-    --background: 220 20% 12%; /* Very Dark Blue */
-    --foreground: 210 30% 90%; /* Light Cool Gray */
-    --card: 220 20% 15%; /* Slightly Lighter Dark Blue */
-    --card-foreground: 210 30% 90%;
-    --popover: 220 20% 15%;
-    --popover-foreground: 210 30% 90%;
-    --primary: 190 65% 55%; /* Vibrant Teal (slightly lighter for dark) */
-    --primary-foreground: 220 20% 5%; /* Very Dark for contrast on Teal */
-    --secondary: 220 15% 25%; /* Darker Cool Gray */
-    --secondary-foreground: 190 55% 70%; /* Lighter Teal */
-    --muted: 220 15% 20%; /* Darker Muted Blue */
-    --muted-foreground: 210 25% 70%; /* Lighter Muted Cool Gray */
-    --accent: 25 80% 65%; /* Soft Coral (slightly lighter for dark) */
-    --accent-foreground: 0 0% 95%; /* Light text on Coral */
+    /* Food App Theme - Dark Mode */
+    --background: 30 15% 12%; /* Very Dark Warm Brown */
+    --foreground: 40 30% 90%; /* Light Cream/Beige */
+    --card: 30 15% 15%; /* Slightly Lighter Dark Brown */
+    --card-foreground: 40 30% 90%;
+    --popover: 30 15% 15%;
+    --popover-foreground: 40 30% 90%;
+    --primary: 30 75% 60%; /* Warm Orange (slightly lighter for dark) */
+    --primary-foreground: 30 15% 5%; /* Very Dark for contrast on Orange */
+    --secondary: 30 10% 25%; /* Darker Warm Gray/Brown */
+    --secondary-foreground: 45 60% 70%; /* Lighter Yellow/Beige */
+    --muted: 30 10% 20%; /* Darker Muted Brown */
+    --muted-foreground: 40 25% 70%; /* Lighter Muted Cream/Beige */
+    --accent: 90 55% 60%; /* Muted Green (slightly lighter for dark) */
+    --accent-foreground: 0 0% 95%; /* Light text on Green */
     --destructive: 0 65% 60%; /* Saturated Red (slightly lighter for dark) */
     --destructive-foreground: 0 0% 100%;
-    --border: 220 15% 25%; /* Darker Cool Border */
-    --input: 220 15% 22%; /* Darker Cool Input */
-    --ring: 190 65% 55%;
+    --border: 30 10% 25%; /* Darker Warm Border */
+    --input: 30 10% 22%; /* Darker Warm Input */
+    --ring: 30 75% 60%;
 
-    --chart-1: 190 60% 60%;
-    --chart-2: 210 50% 65%;
-    --chart-3: 25 70% 70%;
-    --chart-4: 200 55% 65%;
-    --chart-5: 30 60% 75%;
-    
-    --sidebar-background: 220 20% 10%; 
-    --sidebar-foreground: 210 30% 90%;
-    --sidebar-primary: 190 65% 55%;
-    --sidebar-primary-foreground: 220 20% 5%;
-    --sidebar-accent: 220 15% 20%;
-    --sidebar-accent-foreground: 210 30% 90%;
-    --sidebar-border: 220 15% 25%;
-    --sidebar-ring: 190 65% 55%;
+    --chart-1: 30 70% 65%;
+    --chart-2: 45 55% 70%;
+    --chart-3: 90 45% 60%;
+    --chart-4: 20 60% 65%;
+    --chart-5: 35 50% 75%;
+
+    --sidebar-background: 30 15% 10%;
+    --sidebar-foreground: 40 30% 90%;
+    --sidebar-primary: 30 75% 60%;
+    --sidebar-primary-foreground: 30 15% 5%;
+    --sidebar-accent: 30 10% 20%;
+    --sidebar-accent-foreground: 40 30% 90%;
+    --sidebar-border: 30 10% 25%;
+    --sidebar-ring: 30 75% 60%;
   }
 }
 

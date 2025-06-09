@@ -8,7 +8,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { Badge } from '@/components/ui/badge';
 import { useFavorites } from '@/hooks/useFavorites';
 import { Heart, Clock, Users, List, ClipboardList, Info, Image as ImageIcon, LoaderCircle } from 'lucide-react';
-import Image from 'next/image';
+import NextImage from 'next/image'; // Renamed to avoid conflict with Lucide icon
 import { useToast } from "@/hooks/use-toast";
 
 interface RecipeDisplayProps {
@@ -33,25 +33,25 @@ export default function RecipeDisplay({ recipe, isLoadingImage = false }: Recipe
 
   return (
     <Card className="w-full shadow-xl animate-fade-in">
-      <CardHeader className="p-0 relative">
-        <div className="w-full h-64 bg-muted flex items-center justify-center rounded-t-lg">
+      <CardHeader className="p-0">
+        <div className="w-full aspect-video bg-muted rounded-t-lg overflow-hidden relative max-h-[400px] md:max-h-[450px]">
           {isLoadingImage ? (
-            <div className="flex flex-col items-center justify-center text-primary">
+            <div className="absolute inset-0 flex flex-col items-center justify-center text-primary">
               <LoaderCircle className="h-12 w-12 animate-spin" />
               <p className="mt-2 text-sm font-semibold">Generating Image...</p>
             </div>
           ) : recipe.imageUrl ? (
-            <Image
+            <NextImage
               src={recipe.imageUrl}
               alt={recipe.title}
-              width={800}
-              height={400}
-              className="rounded-t-lg object-cover w-full h-full"
+              layout="fill"
+              objectFit="cover"
+              className="rounded-t-lg"
               data-ai-hint="recipe dish food"
               priority
             />
           ) : (
-            <div className="flex flex-col items-center justify-center text-muted-foreground">
+            <div className="absolute inset-0 flex flex-col items-center justify-center text-muted-foreground">
               <ImageIcon className="h-12 w-12" />
               <p className="mt-2 text-sm">No image available</p>
             </div>
