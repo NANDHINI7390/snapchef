@@ -35,11 +35,14 @@ const prompt = ai.definePrompt({
   output: {schema: IdentifyIngredientsOutputSchema},
   prompt: `You are a culinary expert skilled at identifying ingredients from images.
 
-  Analyze the following image and identify the ingredients present. Return a list of ingredients.
-  
-  Image: {{media url=photoDataUri}}
-  
-  Ingredients:`, // just list ingredients, comma separated
+Analyze the provided image and identify all visible food ingredients.
+Return your findings as a JSON object, adhering strictly to the following structure:
+{
+  "ingredients": ["ingredient one", "ingredient two", "etc."]
+}
+
+Image: {{media url=photoDataUri}}
+`,
 });
 
 const identifyIngredientsFlow = ai.defineFlow(
