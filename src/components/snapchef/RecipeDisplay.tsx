@@ -24,26 +24,27 @@ export default function RecipeDisplay({ recipe }: RecipeDisplayProps) {
       removeFavorite(recipeId);
       toast({ title: "Recipe removed from favorites!" });
     } else {
-      addFavorite({ ...recipe, id: recipeId });
+      addFavorite({ ...recipe, id: recipeId }); // Ensure ID is part of the recipe object being saved
       toast({ title: "Recipe saved to favorites!" });
     }
   };
 
   return (
-    <Card className="w-full shadow-xl">
+    <Card className="w-full shadow-xl animate-fade-in">
       <CardHeader className="p-0">
         {recipe.imageUrl ? (
           <Image
-            src={recipe.imageUrl}
+            src={recipe.imageUrl} // This will now be the corrected placehold.co URL or a future actual image URL
             alt={recipe.title}
             width={800}
             height={400}
             className="rounded-t-lg object-cover w-full h-64"
-            data-ai-hint="food recipe"
+            data-ai-hint="recipe dish" // Hint for AI to understand this is a generated/specific recipe image
+            priority // Prioritize loading the main recipe image
           />
         ) : (
           <Image
-            src={`https://placehold.co/800x400.png`}
+            src={`https://placehold.co/800x400.png`} // Fallback placeholder
             alt="Placeholder image for recipe"
             width={800}
             height={400}
@@ -89,10 +90,10 @@ export default function RecipeDisplay({ recipe }: RecipeDisplayProps) {
           <Accordion type="single" collapsible className="w-full">
             {recipe.instructions.map((step, index) => (
               <AccordionItem value={`item-${index}`} key={index}>
-                <AccordionTrigger className="text-left hover:no-underline">
+                <AccordionTrigger className="text-left hover:no-underline text-base">
                   <span className="font-semibold mr-2">Step {index + 1}</span>
                 </AccordionTrigger>
-                <AccordionContent className="pb-4 pt-2">
+                <AccordionContent className="pb-4 pt-2 text-muted-foreground">
                   {step}
                 </AccordionContent>
               </AccordionItem>

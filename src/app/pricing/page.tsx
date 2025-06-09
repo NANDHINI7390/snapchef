@@ -47,7 +47,7 @@ export default function PricingPage() {
 
   return (
     <div className="space-y-12">
-      <section className="text-center space-y-4">
+      <section className="text-center space-y-4 animate-slide-in-up">
         <h1 className="text-5xl font-headline font-bold">
           Find the Perfect <span className="text-primary">SnapChef</span> Plan
         </h1>
@@ -57,12 +57,14 @@ export default function PricingPage() {
       </section>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {plans.map((plan) => (
-          <PricingCard key={plan.planName} {...plan} />
+        {plans.map((plan, index) => (
+          <div key={plan.planName} className="animate-slide-in-up" style={{animationDelay: `${index * 0.1 + 0.2}s`}}>
+            <PricingCard {...plan} />
+          </div>
         ))}
       </div>
 
-      <section className="text-center mt-16 p-8 bg-card rounded-lg shadow-md">
+      <section className="text-center mt-16 p-8 bg-card rounded-lg shadow-md animate-fade-in" style={{animationDelay: '0.5s'}}>
         <h2 className="text-3xl font-headline mb-4">Frequently Asked Questions</h2>
         <div className="max-w-2xl mx-auto text-left space-y-4">
           <div>

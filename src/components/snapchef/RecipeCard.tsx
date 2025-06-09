@@ -12,15 +12,13 @@ interface RecipeCardProps {
 
 export default function RecipeCard({ recipe }: RecipeCardProps) {
   const recipeId = recipe.id || recipe.title.toLowerCase().replace(/\s+/g, '-');
-  // In a real app, this link would go to a dynamic route like /recipe/[id]
-  // For now, it's a placeholder or could link to a section on My Recipes if full display is there
   const recipeLink = `/my-recipes#${recipeId}`; 
 
   return (
-    <Card className="flex flex-col h-full shadow-lg hover:shadow-xl transition-shadow duration-300">
+    <Card className="flex flex-col h-full shadow-lg hover:shadow-xl transition-all duration-300 ease-out hover:scale-[1.02] animate-slide-in-up">
       <CardHeader className="p-0 relative">
         <Image
-          src={recipe.imageUrl || `https://placehold.co/600x400.png?text=${encodeURIComponent(recipe.title)}`}
+          src={recipe.imageUrl || `https://placehold.co/600x400.png`}
           alt={recipe.title}
           width={600}
           height={300}
@@ -52,12 +50,7 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
         </div>
       </CardContent>
       <CardFooter>
-        {/* For a real app, this button would be more functional.
-            If clicking the card itself navigates, button might not be needed or could be "View Details".
-            Given it's a card in "My Recipes", it might be "View Full Recipe" or just part of clickable card.
-        */}
         <Button variant="ghost" className="w-full text-primary" asChild>
-           {/* This link is currently a placeholder for navigation */}
           <Link href={recipeLink}>
             View Recipe <ArrowRight className="ml-2 h-4 w-4" />
           </Link>

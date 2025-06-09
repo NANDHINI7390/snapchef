@@ -83,11 +83,11 @@ export default function ImageUploadForm() {
     setIsLoadingRecipe(true);
     setGeneratedRecipe(null);
 
-    try {
-      // For now, no cuisine selection, can be added later
+    try
+     {
       const recipeData: GenerateRecipeOutput = await generateRecipe({ ingredients: identifiedIngredients });
       const newRecipe: Recipe = {
-        id: recipeData.title.toLowerCase().replace(/\s+/g, '-'), // Simple ID generation
+        id: recipeData.title.toLowerCase().replace(/\s+/g, '-') + '-' + Date.now(), // Ensure unique ID
         title: recipeData.title,
         description: recipeData.description,
         ingredients: recipeData.ingredients,
@@ -95,8 +95,7 @@ export default function ImageUploadForm() {
         prepTime: recipeData.prepTime,
         cookTime: recipeData.cookTime,
         servings: recipeData.servings,
-        // Assuming AI might provide an image URL, or we use a placeholder
-        imageUrl: `https://placehold.co/800x400.png?text=${encodeURIComponent(recipeData.title)}`,
+        imageUrl: `https://placehold.co/800x400.png`, // Corrected placeholder URL
       };
       setGeneratedRecipe(newRecipe);
       toast({ title: "Recipe Generated!", description: `Enjoy your ${recipeData.title}!` });
@@ -111,7 +110,7 @@ export default function ImageUploadForm() {
 
   return (
     <div className="space-y-8">
-      <Card className="shadow-lg">
+      <Card className="shadow-xl animate-fade-in">
         <CardHeader>
           <CardTitle className="font-headline text-2xl flex items-center gap-2"><UploadCloud className="text-primary"/>Upload Your Ingredients Photo</CardTitle>
           <CardDescription>Snap a picture of your ingredients, and let our AI whip up a recipe for you!</CardDescription>
@@ -131,7 +130,7 @@ export default function ImageUploadForm() {
             </div>
 
             {imagePreview && (
-              <div className="mt-4 border rounded-lg overflow-hidden shadow-sm aspect-video max-h-[400px] flex justify-center items-center bg-muted">
+              <div className="mt-4 border rounded-lg overflow-hidden shadow-sm aspect-video max-h-[400px] flex justify-center items-center bg-muted animate-fade-in">
                 <Image src={imagePreview} alt="Selected ingredients" width={600} height={400} className="object-contain max-h-full max-w-full" data-ai-hint="food ingredients" />
               </div>
             )}
@@ -145,7 +144,7 @@ export default function ImageUploadForm() {
       </Card>
 
       {error && (
-        <Alert variant="destructive">
+        <Alert variant="destructive" className="animate-fade-in">
           <AlertCircle className="h-4 w-4" />
           <AlertTitle>Error</AlertTitle>
           <AlertDescription>{error}</AlertDescription>
@@ -153,7 +152,7 @@ export default function ImageUploadForm() {
       )}
 
       {identifiedIngredients && !generatedRecipe && (
-        <Card className="shadow-lg">
+        <Card className="shadow-xl animate-slide-in-up">
           <CardHeader>
             <CardTitle className="font-headline text-2xl flex items-center gap-2"><List className="text-primary"/>Identified Ingredients</CardTitle>
           </CardHeader>
@@ -174,14 +173,16 @@ export default function ImageUploadForm() {
       )}
       
       {isLoadingRecipe && !generatedRecipe && (
-        <div className="text-center py-8">
+        <div className="text-center py-8 animate-fade-in">
           <LoadingSpinner size={48} />
           <p className="mt-4 text-lg font-semibold text-primary">Generating your delicious recipe...</p>
         </div>
       )}
 
       {generatedRecipe && (
-        <RecipeDisplay recipe={generatedRecipe} />
+        <div className="animate-slide-in-up">
+          <RecipeDisplay recipe={generatedRecipe} />
+        </div>
       )}
     </div>
   );
