@@ -17,7 +17,7 @@ import {z} from 'genkit';
 const GenerateRecipeInputSchema = z.object({
   ingredients: z
     .array(z.string())
-    .describe('A list of ingredients to use in the recipe.'),
+    .describe('A list of ingredients to use in the recipe. These are the *only* primary ingredients to be used.'),
   cuisine: z
     .string()
     .optional()
@@ -27,13 +27,13 @@ const GenerateRecipeInputSchema = z.object({
 export type GenerateRecipeInput = z.infer<typeof GenerateRecipeInputSchema>;
 
 const GenerateRecipeOutputSchema = z.object({
-  title: z.string().describe('The title of the recipe. This title MUST accurately reflect the main ingredients provided.'),
-  ingredients: z.array(z.string()).describe('The list of ingredients needed for the recipe, including amounts (e.g., "2 large potatoes, diced", "1 red onion, chopped").'),
+  title: z.string().describe('The title of the recipe. This title MUST accurately and primarily reflect the main ingredients provided by the user. Do not invent unrelated dish names.'),
+  ingredients: z.array(z.string()).describe('The list of ingredients needed for the recipe, including amounts (e.g., "2 large potatoes, diced", "1 red onion, chopped"). This list should primarily feature the user-provided ingredients.'),
   instructions: z.array(z.string()).describe('The step-by-step instructions for preparing the recipe.'),
   servings: z.string().optional().describe('The number of servings the recipe makes, e.g. "Serves 4".'),
   prepTime: z.string().optional().describe('The preparation time for the recipe, e.g. "Prep time: 15 minutes".'),
   cookTime: z.string().optional().describe('The cooking time for the recipe, e.g. "Cook time: 30 minutes".'),
-  description: z.string().optional().describe('A short, appetizing description of the recipe, highlighting the main ingredients used from the provided list.'),
+  description: z.string().optional().describe('A short, appetizing description of the recipe. This description MUST accurately highlight the main ingredients used from the user-provided list and reflect the generated recipe title.'),
 });
 
 export type GenerateRecipeOutput = z.infer<typeof GenerateRecipeOutputSchema>;
@@ -46,27 +46,32 @@ const prompt = ai.definePrompt({
   name: 'generateRecipePrompt',
   input: {schema: GenerateRecipeInputSchema},
   output: {schema: GenerateRecipeOutputSchema},
-  prompt: `You are a world-class chef specializing in creating recipes based *only* on the ingredients provided. Your primary goal is to devise a recipe that prominently features these ingredients.
+  prompt: `You are a world-class chef specializing in creating recipes based *strictly* and *only* on the ingredients provided by the user. Your primary goal is to devise a recipe that prominently features these exact ingredients.
 
-You will generate a recipe strictly using the ingredients listed below. The recipe title and description MUST accurately reflect these main ingredients. Do not introduce new primary ingredients. You may assume common pantry staples like oil, salt, pepper, and basic spices if not listed but absolutely necessary for the preparation, but the focus must remain on the provided ingredients.
+You will generate a recipe using ONLY the ingredients listed below.
+IMPORTANT:
+- The recipe title MUST accurately reflect these main ingredients. For example, if the ingredients are "potatoes" and "onions", a good title would be "Potato and Onion Sauté", not "Spicy Vegetable Curry".
+- The recipe description MUST also accurately reflect these main ingredients.
+- DO NOT introduce any new primary food ingredients that are not in the user's list.
+- You may assume common pantry staples like oil, salt, pepper, and basic spices (e.g., cumin, turmeric, oregano - if relevant to the cuisine) ONLY IF ABSOLUTELY NECESSARY for the preparation of the listed ingredients and they are not altering the core nature of the dish based on the provided ingredients. The focus must remain squarely on the provided ingredients.
 
-Ingredients:
+User-Provided Ingredients:
 {{#each ingredients}}
 - {{{this}}}
 {{/each}}
 
 {{#if cuisine}}
-Your recipe should be in the style of {{cuisine}} cuisine.
+Your recipe should be in the style of {{cuisine}} cuisine, but still strictly adhering to the provided ingredients.
 {{/if}}
 
-Please provide the recipe with the following fields, ensuring the title and description closely match the provided ingredients:
-- title: The title of the recipe (e.g., "Potato and Onion Fry", "Spicy Chicken Stir-fry with Bell Peppers").
-- ingredients: A list of all ingredients needed for the recipe, including amounts.
+Please provide the recipe with the following fields, ensuring the title and description very closely match the user-provided ingredients and the actual recipe content:
+- title: The title of the recipe (e.g., "Sautéed Potatoes and Onions", "Chicken and Bell Pepper Stir-fry").
+- ingredients: A list of all ingredients needed for the recipe, including amounts. Ensure this list prominently features the user's ingredients.
 - instructions: Step-by-step instructions for preparing the recipe.
 - servings: The number of servings the recipe makes.
 - prepTime: The preparation time for the recipe.
 - cookTime: The cooking time for the recipe.
-- description: A short, appetizing description of the recipe, highlighting the main ingredients.
+- description: A short, appetizing description of the recipe, highlighting the main ingredients from the user's list and matching the recipe title.
   `,
 });
 

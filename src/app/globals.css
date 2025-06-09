@@ -9,80 +9,80 @@ body {
 
 @layer base {
   :root {
-    /* Food App Theme - Light Mode */
-    --background: 40 50% 98%; /* Light Cream */
-    --foreground: 30 30% 15%; /* Dark Warm Brown */
+    /* New Theme - Light Mode (Cool & Professional) */
+    --background: 210 40% 98%; /* Very Light Blue-Gray */
+    --foreground: 215 25% 25%; /* Dark Slate Blue */
     --card: 0 0% 100%; /* White */
-    --card-foreground: 30 30% 15%;
+    --card-foreground: 215 25% 25%;
     --popover: 0 0% 100%;
-    --popover-foreground: 30 30% 15%;
-    --primary: 30 80% 55%; /* Warm Orange */
+    --popover-foreground: 215 25% 25%;
+    --primary: 205 70% 45%; /* Medium Blue */
     --primary-foreground: 0 0% 100%; /* White */
-    --secondary: 45 70% 92%; /* Light Yellow/Beige */
-    --secondary-foreground: 30 70% 30%; /* Darker Orange/Brown */
-    --muted: 40 40% 94%; /* Lighter Cream/Beige */
-    --muted-foreground: 30 25% 45%; /* Softer Muted Brown */
-    --accent: 90 60% 50%; /* Muted Green */
-    --accent-foreground: 90 80% 15%; /* Dark Green */
+    --secondary: 210 30% 90%; /* Light Gray-Blue */
+    --secondary-foreground: 210 30% 30%; /* Muted Blue */
+    --muted: 210 30% 95%; /* Very Light Gray-Blue */
+    --muted-foreground: 215 20% 50%; /* Muted Slate */
+    --accent: 170 60% 45%; /* Teal/Green Accent */
+    --accent-foreground: 0 0% 100%; /* White on Accent */
     --destructive: 0 70% 55%; /* Clear Red */
     --destructive-foreground: 0 0% 100%;
-    --border: 30 30% 88%; /* Light Warm Border */
-    --input: 30 35% 92%; /* Light Warm Input */
-    --ring: 30 80% 55%; /* Orange for ring */
+    --border: 210 20% 88%; /* Light Gray Border */
+    --input: 210 25% 93%; /* Light Gray Input */
+    --ring: 205 70% 45%; /* Blue for ring */
     --radius: 0.5rem;
 
-    --chart-1: 30 75% 60%;
-    --chart-2: 45 65% 65%;
-    --chart-3: 90 50% 55%;
-    --chart-4: 20 70% 60%;
-    --chart-5: 35 60% 70%;
+    --chart-1: 205 65% 50%;
+    --chart-2: 170 55% 50%;
+    --chart-3: 220 60% 55%;
+    --chart-4: 190 60% 50%;
+    --chart-5: 200 50% 60%;
 
     --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 30 30% 15%;
-    --sidebar-primary: 30 80% 55%;
+    --sidebar-foreground: 215 25% 25%;
+    --sidebar-primary: 205 70% 45%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 40 40% 94%;
-    --sidebar-accent-foreground: 30 30% 15%;
-    --sidebar-border: 30 30% 88%;
-    --sidebar-ring: 30 80% 55%;
+    --sidebar-accent: 210 30% 95%;
+    --sidebar-accent-foreground: 215 25% 25%;
+    --sidebar-border: 210 20% 88%;
+    --sidebar-ring: 205 70% 45%;
   }
 
   .dark {
-    /* Food App Theme - Dark Mode */
-    --background: 30 15% 12%; /* Very Dark Warm Brown */
-    --foreground: 40 30% 90%; /* Light Cream/Beige */
-    --card: 30 15% 15%; /* Slightly Lighter Dark Brown */
-    --card-foreground: 40 30% 90%;
-    --popover: 30 15% 15%;
-    --popover-foreground: 40 30% 90%;
-    --primary: 30 75% 60%; /* Warm Orange (slightly lighter for dark) */
-    --primary-foreground: 30 15% 5%; /* Very Dark for contrast on Orange */
-    --secondary: 30 10% 25%; /* Darker Warm Gray/Brown */
-    --secondary-foreground: 45 60% 70%; /* Lighter Yellow/Beige */
-    --muted: 30 10% 20%; /* Darker Muted Brown */
-    --muted-foreground: 40 25% 70%; /* Lighter Muted Cream/Beige */
-    --accent: 90 55% 60%; /* Muted Green (slightly lighter for dark) */
-    --accent-foreground: 0 0% 95%; /* Light text on Green */
-    --destructive: 0 65% 60%; /* Saturated Red (slightly lighter for dark) */
+    /* New Theme - Dark Mode */
+    --background: 215 28% 17%; /* Dark Slate Blue */
+    --foreground: 210 40% 90%; /* Light Blue-Gray */
+    --card: 215 25% 22%; /* Slightly Lighter Dark Slate */
+    --card-foreground: 210 40% 90%;
+    --popover: 215 25% 22%;
+    --popover-foreground: 210 40% 90%;
+    --primary: 205 70% 55%; /* Brighter Blue for Dark */
+    --primary-foreground: 215 15% 10%; /* Very Dark for contrast on Blue */
+    --secondary: 215 20% 30%; /* Darker Muted Blue */
+    --secondary-foreground: 210 30% 80%; /* Lighter Gray-Blue */
+    --muted: 215 20% 25%; /* Darker Muted Slate */
+    --muted-foreground: 210 30% 70%; /* Lighter Muted Blue-Gray */
+    --accent: 170 60% 55%; /* Brighter Teal/Green for Dark */
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 65% 60%; /* Saturated Red */
     --destructive-foreground: 0 0% 100%;
-    --border: 30 10% 25%; /* Darker Warm Border */
-    --input: 30 10% 22%; /* Darker Warm Input */
-    --ring: 30 75% 60%;
+    --border: 215 20% 30%; /* Darker Border */
+    --input: 215 20% 28%; /* Darker Input */
+    --ring: 205 70% 55%;
 
-    --chart-1: 30 70% 65%;
-    --chart-2: 45 55% 70%;
-    --chart-3: 90 45% 60%;
-    --chart-4: 20 60% 65%;
-    --chart-5: 35 50% 75%;
+    --chart-1: 205 60% 60%;
+    --chart-2: 170 50% 60%;
+    --chart-3: 220 55% 60%;
+    --chart-4: 190 50% 55%;
+    --chart-5: 200 45% 65%;
 
-    --sidebar-background: 30 15% 10%;
-    --sidebar-foreground: 40 30% 90%;
-    --sidebar-primary: 30 75% 60%;
-    --sidebar-primary-foreground: 30 15% 5%;
-    --sidebar-accent: 30 10% 20%;
-    --sidebar-accent-foreground: 40 30% 90%;
-    --sidebar-border: 30 10% 25%;
-    --sidebar-ring: 30 75% 60%;
+    --sidebar-background: 215 28% 15%;
+    --sidebar-foreground: 210 40% 90%;
+    --sidebar-primary: 205 70% 55%;
+    --sidebar-primary-foreground: 215 15% 10%;
+    --sidebar-accent: 215 20% 25%;
+    --sidebar-accent-foreground: 210 40% 90%;
+    --sidebar-border: 215 20% 30%;
+    --sidebar-ring: 205 70% 55%;
   }
 }
 
