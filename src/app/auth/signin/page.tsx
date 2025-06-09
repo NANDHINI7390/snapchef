@@ -8,6 +8,10 @@ import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { Mail, KeyRound } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import { useRouter } from 'next/navigation'; // Added for potential redirect
+// To implement Firebase Auth, you'd uncomment these and ensure Firebase is initialized
+// import { getAuth, GoogleAuthProvider, GithubAuthProvider, signInWithPopup } from "firebase/auth";
+// import { app } from "@/lib/firebase"; // Assuming you have a firebase.ts in src/lib
 
 // Inline SVG for Google Icon
 const GoogleIcon = () => (
@@ -21,15 +25,43 @@ const GitHubIcon = () => (
 
 
 export default function SignInPage() {
+  const router = useRouter();
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Mock sign in logic
     alert("Email/Password Sign in functionality is not yet implemented.");
   };
 
-  const handleSocialSignIn = (provider: string) => {
-    alert(`Sign in with ${provider} functionality is not yet implemented.`);
-  }
+  const handleSocialSignIn = async (provider: string) => {
+    // alert(`Sign in with ${provider} functionality is not yet implemented.`);
+    // TODO: Implement actual sign-in logic using Firebase Authentication or NextAuth.js
+    // Ensure Firebase is initialized in your application (e.g., in a /src/lib/firebase.ts file)
+    // const auth = getAuth(app); // 'app' would be your initialized Firebase app
+    // let authProviderInstance;
+
+    // if (provider === 'Google') {
+    //   authProviderInstance = new GoogleAuthProvider();
+    // } else if (provider === 'GitHub') {
+    //   authProviderInstance = new GithubAuthProvider();
+    // } else {
+    //   console.error("Unsupported provider");
+    //   alert("Unsupported social provider.");
+    //   return;
+    // }
+
+    // try {
+    //   const result = await signInWithPopup(auth, authProviderInstance);
+    //   const user = result.user;
+    //   console.log("Signed in user:", user);
+    //   alert(`Successfully signed in as ${user.displayName || user.email} with ${provider}.`);
+    //   router.push('/profile'); // Or your desired redirect path
+    // } catch (error: any) {
+    //   console.error(`Error during ${provider} sign-in:`, error);
+    //   alert(`Error signing in with ${provider}: ${error.message}. Check console for details.`);
+    // }
+    alert(`Initiating ${provider} sign-in. Full Firebase/OAuth integration and Firebase app initialization are required for this to work.`);
+  };
 
   return (
     <div className="flex items-center justify-center py-12 animate-fade-in">
