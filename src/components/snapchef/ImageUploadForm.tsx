@@ -1,3 +1,4 @@
+
 // src/components/snapchef/ImageUploadForm.tsx
 "use client";
 
@@ -10,10 +11,11 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { identifyIngredients, IdentifyIngredientsOutput } from '@/ai/flows/identify-ingredients';
 import { generateRecipe, GenerateRecipeOutput } from '@/ai/flows/generate-recipe';
+import { generateRecipeImage, GenerateRecipeImageOutput } from '@/ai/flows/generate-recipe-image';
 import RecipeDisplay from '@/components/snapchef/RecipeDisplay';
 import LoadingSpinner from '@/components/snapchef/LoadingSpinner';
 import { useToast } from "@/hooks/use-toast";
-import { UploadCloud, Sparkles, ChefHat, AlertCircle, List } from 'lucide-react';
+import { UploadCloud, Sparkles, ChefHat, AlertCircle, List, Image as ImageIcon } from 'lucide-react';
 import type { Recipe } from '@/lib/types';
 
 
@@ -24,6 +26,7 @@ export default function ImageUploadForm() {
   const [generatedRecipe, setGeneratedRecipe] = useState<Recipe | null>(null);
   const [isLoadingIngredients, setIsLoadingIngredients] = useState(false);
   const [isLoadingRecipe, setIsLoadingRecipe] = useState(false);
+  const [isLoadingRecipeImage, setIsLoadingRecipeImage] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
@@ -62,7 +65,7 @@ export default function ImageUploadForm() {
         toast({ title: "Ingredients Identified!", description: "Ready to generate a recipe?" });
       } else {
         setError("Could not identify any ingredients. Try a different image or angle.");
-        toast({ title: "No Ingredients Found", variant: "destructive" });
+        toast({ title: "No Ingredients Found", variant: "destructive", description: "Please try a clearer image or ensure ingredients are visible." });
       }
     } catch (err) {
       console.error("Error identifying ingredients:", err);
@@ -73,7 +76,7 @@ export default function ImageUploadForm() {
     }
   };
 
-  const handleGenerateRecipe = async () => {
+  const handleGenerateRecipeAndImage = async () => {
     if (!identifiedIngredients || identifiedIngredients.length === 0) {
       setError("No ingredients identified to generate a recipe.");
       return;
@@ -81,13 +84,14 @@ export default function ImageUploadForm() {
 
     setError(null);
     setIsLoadingRecipe(true);
+    setIsLoadingRecipeImage(true); // Start image loading state
     setGeneratedRecipe(null);
 
-    try
-     {
+    try {
+      // Generate recipe text first
       const recipeData: GenerateRecipeOutput = await generateRecipe({ ingredients: identifiedIngredients });
-      const newRecipe: Recipe = {
-        id: recipeData.title.toLowerCase().replace(/\s+/g, '-') + '-' + Date.now(), // Ensure unique ID
+      const newRecipeBase: Omit<Recipe, 'imageUrl'> = { // Omit imageUrl initially
+        id: recipeData.title.toLowerCase().replace(/\s+/g, '-') + '-' + Date.now(),
         title: recipeData.title,
         description: recipeData.description,
         ingredients: recipeData.ingredients,
@@ -95,16 +99,35 @@ export default function ImageUploadForm() {
         prepTime: recipeData.prepTime,
         cookTime: recipeData.cookTime,
         servings: recipeData.servings,
-        imageUrl: `https://placehold.co/800x400.png`, // Corrected placeholder URL
       };
-      setGeneratedRecipe(newRecipe);
-      toast({ title: "Recipe Generated!", description: `Enjoy your ${recipeData.title}!` });
+      
+      // Set recipe with placeholder, then update with AI image
+      setGeneratedRecipe({ ...newRecipeBase, imageUrl: `https://placehold.co/800x400.png` }); 
+      toast({ title: "Recipe Generated!", description: `Enjoy your ${recipeData.title}! Generating image...` });
+      setIsLoadingRecipe(false); // Recipe text is done
+
+      // Now generate the image
+      try {
+        const imageResult: GenerateRecipeImageOutput = await generateRecipeImage({
+          recipeTitle: recipeData.title,
+          recipeDescription: recipeData.description,
+        });
+        setGeneratedRecipe(prev => prev ? { ...prev, imageUrl: imageResult.imageUrl } : null);
+        toast({ title: "Recipe Image Ready!", description: "The recipe image has been generated." });
+      } catch (imgErr) {
+        console.error("Error generating recipe image:", imgErr);
+        toast({ title: "Image Generation Failed", description: "Could not generate recipe image. Using a placeholder.", variant: "destructive" });
+        // Keep the placeholder if image generation fails
+         setGeneratedRecipe(prev => prev ? { ...prev, imageUrl: `https://placehold.co/800x400.png` } : null);
+      }
+
     } catch (err) {
       console.error("Error generating recipe:", err);
       setError("An error occurred while generating the recipe. Please try again.");
       toast({ title: "Recipe Generation Error", description: "Failed to generate recipe.", variant: "destructive" });
-    } finally {
       setIsLoadingRecipe(false);
+    } finally {
+      setIsLoadingRecipeImage(false); // Image loading attempt is finished
     }
   };
 
@@ -131,7 +154,7 @@ export default function ImageUploadForm() {
 
             {imagePreview && (
               <div className="mt-4 border rounded-lg overflow-hidden shadow-sm aspect-video max-h-[400px] flex justify-center items-center bg-muted animate-fade-in">
-                <Image src={imagePreview} alt="Selected ingredients" width={600} height={400} className="object-contain max-h-full max-w-full" data-ai-hint="food ingredients" />
+                <Image src={imagePreview} alt="Selected ingredients" width={600} height={350} className="object-contain max-h-full max-w-full" data-ai-hint="food ingredients" />
               </div>
             )}
             
@@ -151,7 +174,7 @@ export default function ImageUploadForm() {
         </Alert>
       )}
 
-      {identifiedIngredients && !generatedRecipe && (
+      {identifiedIngredients && !generatedRecipe && !isLoadingRecipe && (
         <Card className="shadow-xl animate-slide-in-up">
           <CardHeader>
             <CardTitle className="font-headline text-2xl flex items-center gap-2"><List className="text-primary"/>Identified Ingredients</CardTitle>
@@ -164,24 +187,26 @@ export default function ImageUploadForm() {
             </ul>
           </CardContent>
           <CardFooter>
-            <Button onClick={handleGenerateRecipe} disabled={isLoadingRecipe} className="w-full md:w-auto">
-              {isLoadingRecipe ? <LoadingSpinner size={20} /> : <ChefHat className="mr-2 h-4 w-4" />}
-              Generate Recipe
+            <Button onClick={handleGenerateRecipeAndImage} disabled={isLoadingRecipe || isLoadingRecipeImage} className="w-full md:w-auto">
+              {(isLoadingRecipe || isLoadingRecipeImage) ? <LoadingSpinner size={20} /> : <ChefHat className="mr-2 h-4 w-4" />}
+              Generate Recipe & Image
             </Button>
           </CardFooter>
         </Card>
       )}
       
-      {isLoadingRecipe && !generatedRecipe && (
+      {(isLoadingRecipe || isLoadingRecipeImage) && !generatedRecipe && (
         <div className="text-center py-8 animate-fade-in">
           <LoadingSpinner size={48} />
-          <p className="mt-4 text-lg font-semibold text-primary">Generating your delicious recipe...</p>
+          <p className="mt-4 text-lg font-semibold text-primary">
+            {isLoadingRecipe ? "Generating your delicious recipe..." : "Creating recipe image..."}
+          </p>
         </div>
       )}
 
       {generatedRecipe && (
         <div className="animate-slide-in-up">
-          <RecipeDisplay recipe={generatedRecipe} />
+          <RecipeDisplay recipe={generatedRecipe} isLoadingImage={isLoadingRecipeImage} />
         </div>
       )}
     </div>

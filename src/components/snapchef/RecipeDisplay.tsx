@@ -1,3 +1,4 @@
+
 'use client';
 
 import type { Recipe } from '@/lib/types';
@@ -6,15 +7,16 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Badge } from '@/components/ui/badge';
 import { useFavorites } from '@/hooks/useFavorites';
-import { Heart, Clock, Users, List, ClipboardList, Utensils, Info } from 'lucide-react';
+import { Heart, Clock, Users, List, ClipboardList, Info, Image as ImageIcon, LoaderCircle } from 'lucide-react';
 import Image from 'next/image';
 import { useToast } from "@/hooks/use-toast";
 
 interface RecipeDisplayProps {
   recipe: Recipe;
+  isLoadingImage?: boolean;
 }
 
-export default function RecipeDisplay({ recipe }: RecipeDisplayProps) {
+export default function RecipeDisplay({ recipe, isLoadingImage = false }: RecipeDisplayProps) {
   const { addFavorite, removeFavorite, isFavorite } = useFavorites();
   const { toast } = useToast();
   const recipeId = recipe.id || recipe.title.toLowerCase().replace(/\s+/g, '-');
@@ -24,34 +26,37 @@ export default function RecipeDisplay({ recipe }: RecipeDisplayProps) {
       removeFavorite(recipeId);
       toast({ title: "Recipe removed from favorites!" });
     } else {
-      addFavorite({ ...recipe, id: recipeId }); // Ensure ID is part of the recipe object being saved
+      addFavorite({ ...recipe, id: recipeId });
       toast({ title: "Recipe saved to favorites!" });
     }
   };
 
   return (
     <Card className="w-full shadow-xl animate-fade-in">
-      <CardHeader className="p-0">
-        {recipe.imageUrl ? (
-          <Image
-            src={recipe.imageUrl} // This will now be the corrected placehold.co URL or a future actual image URL
-            alt={recipe.title}
-            width={800}
-            height={400}
-            className="rounded-t-lg object-cover w-full h-64"
-            data-ai-hint="recipe dish" // Hint for AI to understand this is a generated/specific recipe image
-            priority // Prioritize loading the main recipe image
-          />
-        ) : (
-          <Image
-            src={`https://placehold.co/800x400.png`} // Fallback placeholder
-            alt="Placeholder image for recipe"
-            width={800}
-            height={400}
-            className="rounded-t-lg object-cover w-full h-64"
-            data-ai-hint="delicious meal"
-          />
-        )}
+      <CardHeader className="p-0 relative">
+        <div className="w-full h-64 bg-muted flex items-center justify-center rounded-t-lg">
+          {isLoadingImage ? (
+            <div className="flex flex-col items-center justify-center text-primary">
+              <LoaderCircle className="h-12 w-12 animate-spin" />
+              <p className="mt-2 text-sm font-semibold">Generating Image...</p>
+            </div>
+          ) : recipe.imageUrl ? (
+            <Image
+              src={recipe.imageUrl}
+              alt={recipe.title}
+              width={800}
+              height={400}
+              className="rounded-t-lg object-cover w-full h-full"
+              data-ai-hint="recipe dish food"
+              priority
+            />
+          ) : (
+            <div className="flex flex-col items-center justify-center text-muted-foreground">
+              <ImageIcon className="h-12 w-12" />
+              <p className="mt-2 text-sm">No image available</p>
+            </div>
+          )}
+        </div>
          <div className="p-6">
           <CardTitle className="font-headline text-3xl mb-2">{recipe.title}</CardTitle>
           {recipe.description && <CardDescription className="text-lg mb-4">{recipe.description}</CardDescription>}

@@ -7,11 +7,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { Mail, KeyRound, User } from "lucide-react";
-import { useRouter } from 'next/navigation'; // Added for potential redirect
-// To implement Firebase Auth, you'd uncomment these and ensure Firebase is initialized
-// import { getAuth, GoogleAuthProvider, GithubAuthProvider, signInWithPopup } from "firebase/auth";
-// import { app } from "@/lib/firebase"; // Assuming you have a firebase.ts in src/lib
-
+import { useRouter } from 'next/navigation';
+import { app, auth } from "@/lib/firebase"; // Ensure this path is correct
+import { GoogleAuthProvider, GithubAuthProvider, signInWithPopup, UserCredential, createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { useToast } from "@/hooks/use-toast";
 
 // Inline SVG for Google Icon
 const GoogleIcon = () => (
@@ -26,42 +25,69 @@ const GitHubIcon = () => (
 
 export default function SignUpPage() {
   const router = useRouter();
+  const { toast } = useToast();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Mock sign up logic
-    alert("Email/Password Sign up functionality is not yet implemented.");
+    const target = e.target as typeof e.target & {
+      name: { value: string };
+      email: { value: string };
+      password: { value: string };
+    };
+    const name = target.name.value;
+    const email = target.email.value;
+    const password = target.password.value;
+
+    if (!app) {
+      toast({ variant: "destructive", title: "Firebase Not Initialized", description: "Please ensure Firebase is configured correctly." });
+      return;
+    }
+
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      // Update profile with name
+      if (userCredential.user) {
+        await updateProfile(userCredential.user, { displayName: name });
+      }
+      toast({ title: "Sign Up Successful", description: `Welcome, ${name || userCredential.user.email}!` });
+      router.push('/profile');
+    } catch (error: any) {
+      console.error("Error during email/password sign-up:", error);
+      toast({ variant: "destructive", title: "Sign Up Failed", description: error.message });
+    }
   };
 
-  const handleSocialSignUp = async (provider: string) => {
-    // alert(`Sign up with ${provider} functionality is not yet implemented.`);
-    // TODO: Implement actual sign-up logic using Firebase Authentication or NextAuth.js
-    // Ensure Firebase is initialized in your application (e.g., in a /src/lib/firebase.ts file)
-    // const auth = getAuth(app); // 'app' would be your initialized Firebase app
-    // let authProviderInstance;
+  const handleSocialSignUp = async (providerName: string) => {
+    let provider;
+    if (providerName === 'Google') {
+      provider = new GoogleAuthProvider();
+    } else if (providerName === 'GitHub') {
+      provider = new GithubAuthProvider();
+    } else {
+      toast({ variant: "destructive", title: "Unsupported Provider", description: "This social provider is not supported." });
+      return;
+    }
 
-    // if (provider === 'Google') {
-    //   authProviderInstance = new GoogleAuthProvider();
-    // } else if (provider === 'GitHub') {
-    //   authProviderInstance = new GithubAuthProvider();
-    // } else {
-    //   console.error("Unsupported provider");
-    //   alert("Unsupported social provider.");
-    //   return;
-    // }
-
-    // try {
-    //   const result = await signInWithPopup(auth, authProviderInstance); // signInWithPopup is often used for sign-up too
-    //   const user = result.user;
-    //   console.log("Signed up user:", user);
-    //   alert(`Successfully signed up as ${user.displayName || user.email} with ${provider}.`);
-    //   // You might want to save additional user details to your database here
-    //   router.push('/profile'); // Or your desired redirect path
-    // } catch (error: any) {
-    //   console.error(`Error during ${provider} sign-up:`, error);
-    //   alert(`Error signing up with ${provider}: ${error.message}. Check console for details.`);
-    // }
-    alert(`Initiating ${provider} sign-up. Full Firebase/OAuth integration and Firebase app initialization are required for this to work.`);
+    try {
+      if (!app) {
+        toast({ variant: "destructive", title: "Firebase Not Initialized", description: "Please ensure Firebase is configured correctly in src/lib/firebase.ts." });
+        return;
+      }
+      const result: UserCredential = await signInWithPopup(auth, provider);
+      const user = result.user;
+      // You might want to save additional user details to your database here if needed.
+      toast({ title: "Sign Up Successful", description: `Welcome, ${user.displayName || user.email}!` });
+      router.push('/profile'); 
+    } catch (error: any) {
+      console.error(`Error during ${providerName} sign-up:`, error);
+      if (error.code === 'auth/cancelled-popup-request' || error.code === 'auth/popup-closed-by-user') {
+        toast({ variant: "default", title: "Sign-up Cancelled", description: "You closed the sign-up popup." });
+      } else if (error.code === 'auth/account-exists-with-different-credential') {
+         toast({ variant: "destructive", title: "Account Exists", description: "An account already exists with the same email address but different sign-in credentials. Try signing in with the original method or a different email." });
+      } else {
+        toast({ variant: "destructive", title: `${providerName} Sign Up Failed`, description: error.message });
+      }
+    }
   };
 
   return (
@@ -77,21 +103,21 @@ export default function SignUpPage() {
               <Label htmlFor="name">Full Name</Label>
                <div className="relative">
                 <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                <Input id="name" type="text" placeholder="Your Name" required className="pl-10" />
+                <Input id="name" name="name" type="text" placeholder="Your Name" required className="pl-10" />
               </div>
             </div>
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                <Input id="email" type="email" placeholder="you@example.com" required className="pl-10" />
+                <Input id="email" name="email" type="email" placeholder="you@example.com" required className="pl-10" />
               </div>
             </div>
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
               <div className="relative">
                 <KeyRound className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                <Input id="password" type="password" placeholder="Create a strong password" required className="pl-10" />
+                <Input id="password" name="password" type="password" placeholder="Create a strong password" required className="pl-10" />
               </div>
             </div>
             <Button type="submit" className="w-full">
